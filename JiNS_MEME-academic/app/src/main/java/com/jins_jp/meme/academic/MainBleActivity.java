@@ -5,6 +5,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,6 +33,7 @@ import com.jins.meme.academic.util.LogCat;
 import com.jins_jp.meme.academic.ble.BluetoothLeService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -39,6 +43,7 @@ public class MainBleActivity extends MainActivity {
     private BluetoothLeService mBluetoothLeService;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGattCharacteristic mBluetoothGattChar;
+    private BluetoothLeScanner mBluetoothLeScanner;
     private final UUID serviceUUID = BluetoothLeService.SERVICE_UUID;
     private final UUID rxcharaUUID = BluetoothLeService.RX_CHAR_UUID;
     private final UUID txcharaUUID = BluetoothLeService.TX_CHAR_UUID;
@@ -76,6 +81,8 @@ public class MainBleActivity extends MainActivity {
                 mBluetoothAdapter.enable();
             }
         }
+        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+
         // bind service
         Intent intent = new Intent(getApplicationContext(), BluetoothLeService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -114,57 +121,57 @@ public class MainBleActivity extends MainActivity {
         return true;
     }
 
-    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+    private ScanCallback mScanCallback = new ScanCallback() {
 
-        @Override
-        public void onLeScan(final BluetoothDevice device, final int rssi,
-                             final byte[] scanRecord) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (device.getName() == null) {
-                        return;
-                    }
-                    if (serviceUUID.equals(UUID.fromString(getUuid(scanRecord)))) {
-                        // add device address
-                        String address = device.getAddress();
-                        if (!mDeviceSet.contains(address)) {
-                            mDeviceSet.add(address);
-                            LogCat.d(TAG, "address: " + address);
-                        }
-                        address = null;
-                    }
+        public void onBatchScanResults(List<ScanResult> results) {
+        };
+
+        public void onScanFailed(int errorCode) {
+        };
+
+        public void onScanResult(int callbackType, ScanResult result) {
+
+            BluetoothDevice device = result.getDevice();
+            byte[] scanRecord = result.getScanRecord().getBytes();
+            if (result.getDevice() == null) {
+                return;
+            }
+            if (serviceUUID.equals(UUID.fromString(getUuid(scanRecord)))) {
+                // add device address
+                String address = device.getAddress();
+                if (!mDeviceSet.contains(address)) {
+                    mDeviceSet.add(address);
+                    LogCat.d(TAG, "address: " + address);
                 }
-
-                private String getUuid(byte[] scanRecord) {
-                    String uuid = null;
-                    uuid = common.IntToHex2(scanRecord[20] & 0xff)
-                            + common.IntToHex2(scanRecord[19] & 0xff)
-                            + common.IntToHex2(scanRecord[18] & 0xff)
-                            + common.IntToHex2(scanRecord[17] & 0xff)
-                            + "-"
-                            + common.IntToHex2(scanRecord[16] & 0xff)
-                            + common.IntToHex2(scanRecord[15] & 0xff)
-                            + "-"
-                            + common.IntToHex2(scanRecord[14] & 0xff)
-                            + common.IntToHex2(scanRecord[13] & 0xff)
-                            + "-"
-                            + common.IntToHex2(scanRecord[12] & 0xff)
-                            + common.IntToHex2(scanRecord[11] & 0xff)
-                            + "-"
-                            + common.IntToHex2(scanRecord[10] & 0xff)
-                            + common.IntToHex2(scanRecord[9] & 0xff)
-                            + common.IntToHex2(scanRecord[8] & 0xff)
-                            + common.IntToHex2(scanRecord[7] & 0xff)
-                            + common.IntToHex2(scanRecord[6] & 0xff)
-                            + common.IntToHex2(scanRecord[5] & 0xff);
-
-                    return uuid;
-                }
-
-            });
+                address = null;
+            }
         }
 
+        private String getUuid(byte[] scanRecord) {
+            String uuid = null;
+            uuid = common.IntToHex2(scanRecord[20] & 0xff)
+                    + common.IntToHex2(scanRecord[19] & 0xff)
+                    + common.IntToHex2(scanRecord[18] & 0xff)
+                    + common.IntToHex2(scanRecord[17] & 0xff)
+                    + "-"
+                    + common.IntToHex2(scanRecord[16] & 0xff)
+                    + common.IntToHex2(scanRecord[15] & 0xff)
+                    + "-"
+                    + common.IntToHex2(scanRecord[14] & 0xff)
+                    + common.IntToHex2(scanRecord[13] & 0xff)
+                    + "-"
+                    + common.IntToHex2(scanRecord[12] & 0xff)
+                    + common.IntToHex2(scanRecord[11] & 0xff)
+                    + "-"
+                    + common.IntToHex2(scanRecord[10] & 0xff)
+                    + common.IntToHex2(scanRecord[9] & 0xff)
+                    + common.IntToHex2(scanRecord[8] & 0xff)
+                    + common.IntToHex2(scanRecord[7] & 0xff)
+                    + common.IntToHex2(scanRecord[6] & 0xff)
+                    + common.IntToHex2(scanRecord[5] & 0xff);
+
+            return uuid;
+        }
     };
 
     @Override
@@ -303,7 +310,7 @@ public class MainBleActivity extends MainActivity {
         isScannin = enable;
         if (enable) {
             // start device scan
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            mBluetoothLeScanner.startScan(mScanCallback);
             // set timer
             handler.postDelayed(new Runnable() {
                 @Override
@@ -313,7 +320,7 @@ public class MainBleActivity extends MainActivity {
             }, TIMEOUT * 1000);
         } else {
             // stop device scan
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            mBluetoothLeScanner.stopScan(mScanCallback);
         }
         setViewScan();
     }

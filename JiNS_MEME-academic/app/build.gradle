@@ -3,11 +3,10 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.jins_jp.meme.academic"
-        minSdkVersion 18
-	    targetSdkVersion 22
+        minSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "2.0.2"
     }
@@ -16,6 +15,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
