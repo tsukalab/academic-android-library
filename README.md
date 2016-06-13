@@ -13,5 +13,5 @@
 |Nexus9|6.0.1|-|
 |Nexus9|5.1.1|✔|
 
-"-" means currenty not working correctly.
+####### "-" means currenty not working correctly.
 
