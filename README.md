@@ -6,10 +6,12 @@
 
 * Supported Devices and OS. 
 
-| Model | OS| |
+| Model | OS| Operation Varification |
 |:--:|:--:|:--:|
 |Nexus5|6.0.1|-|
 |Nexus5|4.4|✔|
 |Nexus9|6.0.1|-|
 |Nexus9|5.1.1|✔|
+
+"-" means currenty not working correctly.
 
