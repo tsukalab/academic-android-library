@@ -41,6 +41,10 @@
             android:name="com.jins_jp.meme.academic.MainUsbActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask" />
+        <activity
+            android:name="com.jins_jp.meme.academic.LoggerActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask" />
 
         <service
             android:name="com.jins_jp.meme.academic.ble.BluetoothLeService"
