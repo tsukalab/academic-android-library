@@ -56,7 +56,7 @@ public class MainBleActivity extends MainActivity {
 
         // set the tool-bar to this activity
         Toolbar mToolbar = (Toolbar) findViewById(R.id.header);
-        mToolbar.setTitle(R.string.app_title);
+//        mToolbar.setTitle(R.string.app_title);
         setSupportActionBar(mToolbar);
         // set view
         setViewDefault();
