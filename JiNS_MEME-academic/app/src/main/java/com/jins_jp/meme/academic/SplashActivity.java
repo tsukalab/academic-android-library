@@ -220,13 +220,13 @@ public class SplashActivity extends AppCompatActivity implements OnClickListener
         Class<?> cls = MainUsbActivity.class;
 
         if (v.getId() == R.id.button_usb) {
-            cls = MainUsbActivity.class;
+            cls = LoggerActivity.class;
         }
         else if (v.getId() == R.id.button_ble) {
             cls = MainBleActivity.class;
         }
         else {
-            cls = MainUsbActivity.class;
+            cls = LoggerActivity.class;
         }
         Intent intent = new Intent(getApplicationContext(), cls);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
