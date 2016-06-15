@@ -49,7 +49,7 @@ public class SplashActivity extends AppCompatActivity implements OnClickListener
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         setContentView(R.layout.activity_splash);
         // set view
-        setViewVersion();
+        // setViewVersion();
         // set view
         mViewMask = (RelativeLayout) findViewById(R.id.view_mask);
         mViewMain = (RelativeLayout) findViewById(R.id.view_main);
@@ -198,21 +198,21 @@ public class SplashActivity extends AppCompatActivity implements OnClickListener
         }
     }
 
-    private void setViewVersion() {
-        // Set textView
-        TextView textView = (TextView) findViewById(R.id.text_app_version);
-        String versionName = "";
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(
-                    getPackageName(), PackageManager.GET_META_DATA);
-            versionName = getString(R.string.label_version, packageInfo.versionName);
-            packageInfo = null;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        textView.setText(versionName);
-        versionName = null;
-    }
+//    private void setViewVersion() {
+//        // Set textView
+//        TextView textView = (TextView) findViewById(R.id.text_app_version);
+//        String versionName = "";
+//        try {
+//            PackageInfo packageInfo = getPackageManager().getPackageInfo(
+//                    getPackageName(), PackageManager.GET_META_DATA);
+//            versionName = getString(R.string.label_version, packageInfo.versionName);
+//            packageInfo = null;
+//        } catch (NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        textView.setText(versionName);
+//        versionName = null;
+//    }
 
     @Override
     public void onClick(View v) {
