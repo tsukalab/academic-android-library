@@ -4,6 +4,7 @@ package com.jins_jp.meme.academic;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.jins.meme.academic.util.DataEncryption;
 import com.jins.meme.academic.util.HexDump;
@@ -32,6 +37,7 @@ import com.jins_jp.meme.academic.graph.GraphGyro;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -101,6 +107,12 @@ abstract class MainActivity extends AppCompatActivity {
     private boolean EogGraphEnableFlag = false;
     private boolean AccGraphEnableFlag = false;
     private boolean GyroGraphEnableFlag = false;
+
+    private  final Context context = this;
+    private int c = 50;
+    private Timer mTimer = null;
+    Handler mHandler = new Handler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -323,8 +335,12 @@ abstract class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (isMeasure) {
+                            ImageView img = (ImageView) findViewById(R.id.eye);
+                            img.setImageResource(R.drawable.eye1);
                             stop();
                         } else {
+                            ImageView img = (ImageView) findViewById(R.id.eye);
+                            img.setImageResource(R.drawable.eye2);
                             start();
                         }
                     }
@@ -335,8 +351,45 @@ abstract class MainActivity extends AppCompatActivity {
         builder = null;
     }
 
+//    private class MTimerTask1 extends TimerTask{
+//        @Override
+//        public void run(){
+//            if(c < 10){
+//                c = 0;
+//                setContentView(R.layout.activity_logger);
+//                ImageView img = (ImageView) findViewById(R.id.eye);
+//                img.setImageResource(R.drawable.eye3);
+//            } else {
+//                ImageView img = (ImageView) findViewById(R.id.eye);
+//                img.setImageResource(R.drawable.eye2);
+//            }
+//        }
+//    }
+
     private void start() {
+//        mTimer1.schedule(mTimerTask1, 0, 15000);
         LogCat.i(TAG, "start measurement");
+        mTimer = new Timer(true);
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(c < 50){
+                            c = 0;
+                            setContentView(R.layout.activity_logger);
+                            ImageView img = (ImageView) findViewById(R.id.eye);
+                            img.setImageResource(R.drawable.eye3);
+                        } else {
+                            c = 0;
+                            ImageView img = (ImageView) findViewById(R.id.eye);
+                            img.setImageResource(R.drawable.eye2);
+                        }
+                    }
+                });
+            }
+        }, 0, 15000);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -372,6 +425,7 @@ abstract class MainActivity extends AppCompatActivity {
 
                 // set timer
                 final Timer timer;
+                final Timer timer1;
                 final long delay = 0L;
                 final long interval = 1L;
                 final long timeout = TIMEOUT * 1000L;
@@ -926,6 +980,12 @@ abstract class MainActivity extends AppCompatActivity {
                     values[8] = (short) (values[5] - values[6]);
                     values[9] = (short) (0 - (values[3] + values[4]) / 2);
                     values[10] = (short) (0 - (values[5] + values[6]) / 2);
+
+
+                    if(values[9] >= 230 || values[9] <= -230) {
+                        c++;
+                        Log.e("CCCCCCCCC=====", String.valueOf(c));
+                    }
 
                     if ((count % GrasphSkipCount) == 0) {
                         if (EogGraphEnableFlag == true) {

@@ -56,7 +56,7 @@ public class MainBleActivity extends MainActivity {
 
         // set the tool-bar to this activity
         Toolbar mToolbar = (Toolbar) findViewById(R.id.header);
-//        mToolbar.setTitle(R.string.app_title);
+        mToolbar.setTitle(R.string.app_title);
         setSupportActionBar(mToolbar);
         // set view
         setViewDefault();
@@ -483,8 +483,7 @@ public class MainBleActivity extends MainActivity {
                         public void run() {
 
                             Spinner spinner = (Spinner) findViewById(R.id.spinner_select_quality);
-                            final long priod = 400 / (((spinner
-                                    .getSelectedItemPosition() + 0x01) & 0xFF) * 10);
+                            final long priod = 400 / (((spinner.getSelectedItemPosition() + 0x01) & 0xFF) * 10);
                             final long count = mNumTotalLast - mNumTotalPrev;
                             final BigDecimal num_count = new BigDecimal(
                                     count);

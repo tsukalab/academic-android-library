@@ -385,7 +385,11 @@
                         android:numStars="3"
                         android:rating="3" />
                 </LinearLayout>
+
+
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:id="@+id/category_graph"
@@ -443,7 +447,22 @@
                     android:orientation="horizontal">
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/eye1"
+                        android:id="@+id/eye"/>
+
+                </LinearLayout>
+
             </LinearLayout>
+
 
         </RelativeLayout>
     </ScrollView>

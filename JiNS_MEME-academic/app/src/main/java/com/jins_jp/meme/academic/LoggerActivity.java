@@ -243,7 +243,7 @@ public class LoggerActivity extends MainActivity {
                     LogCat.d(TAG, "ACTION_GATT_DESCRIPTOR_WRITE");
                     // start service
                     startService(new Intent(getApplicationContext(), BluetoothLeService.class));
-                    common.showToast("Conncted to the MEME");
+                    common.showToast("Connected to the MEME");
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -483,8 +483,7 @@ public class LoggerActivity extends MainActivity {
                         public void run() {
 
                             Spinner spinner = (Spinner) findViewById(R.id.spinner_select_quality);
-                            final long priod = 400 / (((spinner
-                                    .getSelectedItemPosition() + 0x01) & 0xFF) * 10);
+                            final long priod = 400 / (((spinner.getSelectedItemPosition() + 0x01) & 0xFF) * 10);
                             final long count = mNumTotalLast - mNumTotalPrev;
                             final BigDecimal num_count = new BigDecimal(
                                     count);
